@@ -1,0 +1,14 @@
+MQTT_CONFIG:
+    MQTT_IP : "rabbitmq"  # MQTT broker IP address as string
+    MQTT_Port : 1883 # MQTT broker port number
+    Topic : "status.queue" # MQTT broker operational data topic
+    QoS : 1 # Quality of Service for publishing
+    userName : "admin"
+    Password : "admin123"
+    
+MONGO_CONFIG:
+    HOST: "mongodb"
+    PORT: 27017
+    USERNAME: "admin"
+    PASSWORD: "admin123"
+    DATABASE: "mqtt_database"

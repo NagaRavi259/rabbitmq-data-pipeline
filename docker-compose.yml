@@ -1,0 +1,67 @@
+version: '3'
+services:
+  rabbitmq:
+    build: .
+    hostname: rabbit-upswing
+    container_name: rabbit-upswing
+    environment:
+      - RABBITMQ_NODENAME=rabbit@localhost
+    ports:
+      - "15672:15672"
+      - "1883:1883"
+    volumes:
+      - ./certs:/etc/rabbitmq/certs  
+    networks:
+      - upswing-network
+      
+  mongodb:
+    image: mongo:latest
+    container_name: mongo-upswing
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin123
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./mongo-data:/data/db
+    networks:
+      - upswing-network
+      
+  data_publisher:
+    build:
+      context: .
+      dockerfile: data_pub_Dockerfile
+    container_name: data_publisher
+    networks:
+      - upswing-network
+    depends_on:
+      - rabbitmq
+      - mongodb
+
+  data_subscriber:
+    build:
+      context: .
+      dockerfile: data_sub_Dockerfile
+    container_name: data_subscriber
+    networks:
+      - upswing-network
+    depends_on:
+      - rabbitmq
+      - mongodb
+
+  fastapi_app:
+    build:
+      context: .
+      dockerfile: fastapi_Dockerfile
+    container_name: fastapi_app
+    ports:
+      - "8000:8000"
+    networks:
+      - upswing-network
+    depends_on:
+      - rabbitmq
+      - mongodb
+
+networks:
+  upswing-network:
+    driver: bridge

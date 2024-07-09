@@ -1,0 +1,6 @@
+MONGO_CONFIG:
+    HOST: "mongodb"
+    PORT: 27017
+    USERNAME: "admin"
+    PASSWORD: "admin123"
+    DATABASE: "mqtt_database"
